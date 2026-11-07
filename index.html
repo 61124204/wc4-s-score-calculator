@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="zh-CN" data-theme="field">
+<html lang="zh-CN" data-theme="paper">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="世界征服者4集团军困难模式S评分计算器。计算回合分、城市分、功勋分，反推达到S所需的功勋与回合。">
-  <meta name="theme-color" content="#18231e">
-  <title>S 评分作战室 · 世界征服者4</title>
+  <meta name="theme-color" content="#f6f7f8">
+  <title>S 分计算器 · 世界征服者4</title>
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
   <script src="score.js" defer></script>
@@ -13,67 +13,46 @@
 </head>
 <body>
   <div class="page">
-    <header class="topbar">
-      <a class="brand" href="./" aria-label="S评分计算器首页"><span class="brand-mark">IV</span><span>WC4<span class="brand-sub">FIELD CALCULATOR</span></span></a>
-      <nav class="theme-switch" aria-label="页面设计方案">
-        <button type="button" data-theme-choice="field" aria-pressed="true"><span class="theme-dot field-dot"></span>01 作战台</button>
-        <button type="button" data-theme-choice="paper" aria-pressed="false"><span class="theme-dot paper-dot"></span>02 数据卡</button>
-        <button type="button" data-theme-choice="night" aria-pressed="false"><span class="theme-dot night-dot"></span>03 仪表盘</button>
-      </nav>
-      <a class="source-link" href="https://github.com/61124204/wc4-s-score-calculator" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
-    </header>
-
+    <header class="topbar"><div><h1>世界征服者4 · S 分计算器</h1><p>集团军困难模式 · 安卓 1.30.0 规则</p></div><a href="https://github.com/61124204/wc4-s-score-calculator">GitHub</a></header>
     <main>
-      <section class="intro">
-        <div><p class="eyebrow">WORLD CONQUEROR 4 / ARMY GROUP</p><h1>距离 <em>S</em>，还有多远？</h1><p class="intro-copy">把你的战局带进来，让下一步有数可算。</p></div>
-        <div class="edition"><span class="status-dot"></span><span>集团军 · 困难模式<small>基于安卓 1.30.0 评分规则</small></span></div>
-      </section>
-
       <div class="workspace">
         <section class="input-panel panel" aria-labelledby="input-title">
-          <div class="section-heading"><div><span class="section-index">01 / INPUT</span><h2 id="input-title">你的战局</h2></div><button id="reset" type="button" class="text-button">载入示例 ↺</button></div>
+          <div class="section-heading"><div><h2 id="input-title">你的战局</h2></div><button id="reset" type="button" class="text-button">载入示例</button></div>
           <form id="calculator" novalidate>
-            <div class="input-field"><label for="rounds">通关回合<span>越早通关，回合分越高</span></label><div class="number-wrap"><input id="rounds" name="rounds" type="number" value="40" min="1" max="9999" step="1" inputmode="numeric" required><span>回合</span></div><input id="round-slider" type="range" min="1" max="150" value="40" aria-label="调整通关回合"><div class="range-caption"><span>1 回合</span><span>150 回合</span></div></div>
+            <div class="input-field"><label for="rounds">通关回合<span>越早通关，回合分越高</span></label><div class="number-wrap"><input id="rounds" name="rounds" type="number" value="40" min="1" max="9999" step="1" inputmode="numeric" required><span>回合</span></div></div>
             <div class="input-field"><label for="cities">结算时拥有的城市<span>每座城市贡献 100 分</span></label><div class="number-wrap"><input id="cities" name="cities" type="number" value="30" min="0" max="10000" step="1" inputmode="numeric" required><span>座</span></div></div>
             <div class="merit-fields">
               <div class="input-field"><label for="remaining">剩余功勋点</label><div class="number-wrap"><input id="remaining" name="remaining" type="number" value="200" min="0" max="999" step="1" inputmode="numeric" required><span>点</span></div></div>
               <div class="input-field"><label for="spent">已消耗功勋点</label><div class="number-wrap"><input id="spent" name="spent" type="number" value="200" min="0" max="1000000" step="1" inputmode="numeric" required><span>点</span></div></div>
             </div>
-            <div class="merit-note"><span class="note-icon">＋</span><span>累计功勋 <b id="merit-total">400</b> 点<small>正常花掉的功勋，同样计入评分。</small></span></div>
+            <div class="merit-note"><span>累计功勋 <b id="merit-total">400</b> 点<small>正常花掉的功勋，同样计入评分。</small></span></div>
             <p id="input-error" class="input-error" role="alert"></p>
           </form>
           <p class="scope-note">按困难模式获胜结算预估。输入城市归属和功勋点数，结果即时更新。</p>
         </section>
 
         <section class="result-panel panel" aria-labelledby="result-title">
-          <div class="section-heading"><div><span class="section-index">02 / EVALUATION</span><h2 id="result-title">战斗评分预估</h2></div><span class="live-badge"><span class="status-dot"></span>实时计算</span></div>
-          <div class="score-stage"><div class="score-hero"><span class="total-label">预计总分</span><output id="total-score" for="rounds cities remaining spent">28,870</output><p id="score-message">已达到 S 评级，领先门槛 869 分。</p></div><div class="grade-seal" aria-label="预估评级"><div class="seal-orbit"></div><span id="grade-letter">S</span><span class="seal-caption">BATTLE RATING</span><i class="seal-star">✦</i></div></div>
-          <div class="threshold"><div><span>S 评级进度</span><strong id="progress-label">100%</strong></div><div class="progress-track"><span id="progress-fill"></span></div><div class="progress-caption"><span>0</span><span>S ≥ 28,001</span></div></div>
+          <div class="section-heading"><div><h2 id="result-title">战斗评分预估</h2></div><span class="live-badge"><span class="status-dot"></span>实时计算</span></div>
+          <div class="score-stage"><div class="score-hero"><span class="total-label">预计总分</span><output id="total-score" for="rounds cities remaining spent">28,870</output><p id="score-message">已达到 S 评级，领先门槛 869 分。</p></div><div class="grade-seal" aria-label="预估评级"><span id="grade-letter">S</span><small>评级</small></div></div>
           <div class="breakdown">
-            <div class="score-part"><span class="part-icon">◷</span><span>回合分</span><strong id="round-score">15,811</strong><div class="part-bar"><span id="round-bar"></span></div></div>
-            <div class="score-part"><span class="part-icon">▥</span><span>城市分</span><strong id="city-score">3,000</strong><div class="part-bar"><span id="city-bar"></span></div></div>
-            <div class="score-part"><span class="part-icon">✧</span><span>功勋分</span><strong id="merit-score">10,059</strong><div class="part-bar"><span id="merit-bar"></span></div></div>
+            <div class="score-part"><span>回合分</span><strong id="round-score">15,811</strong></div>
+            <div class="score-part"><span>城市分</span><strong id="city-score">3,000</strong></div>
+            <div class="score-part"><span>功勋分</span><strong id="merit-score">10,059</strong></div>
           </div>
-          <div class="grade-scale" aria-label="评级分数区间"><span data-grade="E">E <small>1</small></span><span data-grade="D">D <small>10,001</small></span><span data-grade="C">C <small>15,001</small></span><span data-grade="B">B <small>20,001</small></span><span data-grade="A">A <small>24,001</small></span><span data-grade="S" class="current-grade">S <small>28,001</small></span></div>
-          <div class="result-actions"><span>获胜后才会产生实际评级</span><button type="button" id="share" class="text-button">复制这组战局 ↗</button></div>
+          
+          <div class="result-actions"><span>获胜后才会产生实际评级</span><button type="button" id="share" class="text-button">复制这组战局</button></div>
           <p id="share-status" class="sr-only" role="status"></p>
         </section>
       </div>
 
       <section class="planning" aria-label="S评分规划">
-        <article class="plan-card panel"><span class="section-index">PLAN A / 功勋目标</span><h2>还需要多少功勋？</h2><div class="plan-value"><strong id="needed-merit">349</strong><span>累计功勋点</span></div><p id="merit-plan">保持 40 回合、30 座城市，累计至少需要 349 点。</p><div class="plan-foot" id="merit-plan-foot">当前已满足</div></article>
-        <article class="plan-card panel"><span class="section-index">PLAN B / 回合目标</span><h2>最晚几回合拿 S？</h2><div class="plan-value"><strong id="latest-round">43</strong><span id="latest-unit">回合</span></div><p id="round-plan">保持 30 座城市、400 点功勋，计算最晚通关时间。</p><div class="plan-foot" id="round-plan-foot">按当前城市与累计功勋推算</div></article>
+        <article class="plan-card panel"><h2>S 级所需累计功勋</h2><div class="plan-value"><strong id="needed-merit">334</strong><span>累计功勋点</span></div><p id="merit-plan">保持 40 回合、30 座城市，累计至少需要 334 点。</p><div class="plan-foot" id="merit-plan-foot">当前已满足</div></article>
+        <article class="plan-card panel"><h2>S 级最晚通关回合</h2><div class="plan-value"><strong id="latest-round">43</strong><span id="latest-unit">回合</span></div><p id="round-plan">保持 30 座城市、400 点功勋，计算最晚通关时间。</p><div class="plan-foot" id="round-plan-foot">按当前城市与累计功勋推算</div></article>
       </section>
 
-      <section class="trend-panel panel" aria-labelledby="trend-title">
-        <div class="section-heading"><div><span class="section-index">03 / TRAJECTORY</span><h2 id="trend-title">回合数如何影响评分</h2></div><span class="chart-legend"><i></i>当前城市与功勋　<span>S 门槛</span></span></div>
-        <div id="chart" class="chart" role="img" aria-label="当前城市与累计功勋下，不同通关回合对应的预估总分"></div>
-        <p class="chart-note">城市和功勋保持当前输入值。曲线仅展示时间变化带来的评分差异。</p>
-      </section>
-
-      <section class="formula-panel panel"><details><summary><span><span class="section-index">REFERENCE / 规则说明</span><strong>怎么算出来的？</strong></span><span class="details-plus" aria-hidden="true">＋</span></summary><div class="formula-content"><div><h3>三个分项，分别取整</h3><code>回合分 = ⌊10000 × √(100 ÷ 回合数)⌋</code><code>城市分 = 城市数 × 100</code><code>功勋分 = ⌊400 × √累计功勋点 × ⁴√(100 ÷ 回合数)⌋</code><p>累计功勋点 = 已消耗功勋点 + ⌊剩余功勋经验 ÷ 100⌋。输入框里的“剩余功勋点”即折算后的整点数，零头经验不计入。正常消耗功勋会转入已消耗记录。</p></div><div><h3>适用范围</h3><p>公式和评级阈值来自本次核对的安卓 1.30.0 APK，适用于集团军困难模式，包括《遗失的钟声》困难图。国家／集团军星级与难度没有直接评分乘数。</p><p>分项采用单精度运算近似原生结算。游戏改版、异常存档或人为修改功勋记录时，实际结算可能不同。战区、征服模式使用各自的评分规则。</p><p>配置依据：ConquerPrizeSettings.json 的 ArmyGroupMin / ArmyGroupMax；原生结算函数 0x378700。</p></div></div></details></section>
+      <section class="formula-panel panel"><details><summary><span><strong>怎么算出来的？</strong></span><span class="details-plus" aria-hidden="true">＋</span></summary><div class="formula-content"><div><h3>三个分项，分别取整</h3><code>回合分 = ⌊10000 × √(100 ÷ 回合数)⌋</code><code>城市分 = 城市数 × 100</code><code>功勋分 = ⌊400 × √累计功勋点 × ⁴√(100 ÷ 回合数)⌋</code><p>累计功勋点 = 已消耗功勋点 + ⌊剩余功勋经验 ÷ 100⌋。输入框里的“剩余功勋点”即折算后的整点数，零头经验不计入。正常消耗功勋会转入已消耗记录。</p></div><div><h3>适用范围</h3><p>公式和评级阈值来自本次核对的安卓 1.30.0 APK，适用于集团军困难模式，包括《遗失的钟声》困难图。国家／集团军星级与难度没有直接评分乘数。</p><p>分项采用单精度运算近似原生结算。游戏改版、异常存档或人为修改功勋记录时，实际结算可能不同。战区、征服模式使用各自的评分规则。</p><p>配置依据：ConquerPrizeSettings.json 的 ArmyGroupMin / ArmyGroupMax；原生结算函数 0x378700。</p></div></div></details></section>
     </main>
-    <footer><span>WC4 S SCORE CALCULATOR</span><span>玩家自制工具 · 计算在本地完成</span><span>ANDROID 1.30.0</span></footer>
+    <footer>玩家自制工具 · 所有计算在本地完成</footer>
   </div>
 </body>
 </html>
